@@ -45,8 +45,10 @@ class Main:
     programs = FileType(Type.PROGRAM, programs, destPrograms)
     misc = FileType(Type.MISC, "", destMisc)
 
+#ADD ALL INSTANCES TO AN ARRAY.
     fileTypes = [audioFile, imageFile, textFile, programs, misc]
 
+#FUNCTION TO GET CONTENTS OF THE SPECIFIED FOLDER AND GO THROUGH THE FILES.
     def organizefiles(self):
         contents = os.listdir(self.source)
         print(contents)
@@ -55,44 +57,45 @@ class Main:
             return
         else:
             for x in contents:
+                #CHECK IF ITEM IS A FILE, IF NOT, PASS ON.
                 if (os.path.isfile(Path(self.source / x)) == False):
-                    print("Item " + x + " is not a file.")
+                    print("Item " + x + " is not a file. It will not be moved.")
                     continue
-                print("checking file : " + x)
+                #CHECK THE FILE TYPE AND MOVE IT ACCORDINGLY
+                print("Moving file : " + x)
                 self.checkFile(x)
             print("\'Downloads\' is now organized!")
     
     def checkFile(self, item):
-
         #CHECK EACH FILETYPE AGAINST THIS ITEM
         for ftype in self.fileTypes:
-            names = ftype.names
 
             #CHECK EACH POSSIBLE NAME ENDING OF THE FILE TYPE AGAINST THIS ITEM.
+            names = ftype.names
             for x in names:
                 regex = "(" + x + ")$"
                 result = re.search(regex, item)
 
                 #IF FOUND, MOVE FILE 
                 if(result != None):
-                    path = Path(ftype.destination / item)
+
                     #CHECK THERE IS NO DUPLICATE IN THE DESTINATION
+                    path = Path(ftype.destination / item)
                     if(path.exists()):
-                        try:
-                            #os.remove(path)
-                            print("cant move file " + item)
-                            continue
-                        except:
-                            print("cannot remove file! path exists but cant be found?")
-                            continue
-                    #CHECK THE FILE TO MOVE EXISTS STILL
+                        #os.remove(path)
+                        print("cant move file " + item)
+                        continue
+                    
+                    #CHECK THE FILE TO MOVE EXISTS 
                     file_to_move = Path(self.source / item)
                     if(file_to_move.exists() == False):
                         continue
+
                     #FILE EXISTS, NO CONFLICTS WITH DESTINATION --> MOVE FILE
                     self.moveFile(item, ftype.destination)
                     print(item + " has been moved")
                     return
+
         #TYPE NOT FOUND, MOVE TO MISC
         self.moveFile(item, self.misc.destination)
 
@@ -104,7 +107,6 @@ print("Welcome to your file manager!")
 instance = Main()
 key = input("Type \'or\' to organize the \'Downloads\'-folder.\n\n")
 if(key == 'or'):
-    #instance.getMode()
     instance.organizefiles()
 
 
