@@ -25,7 +25,7 @@ class Main:
     source = Path(h / "Downloads")
 
 #TARGET DIRECTORIES
-    destination = Path(h / "Desktop" / "OrganizedDownloads") 
+    destination = Path(h / "Desktop" / "FileManager" /"OrganizedDownloads") 
     destAudio = Path(destination / "Audio")
     destText = Path(destination / "Text")
     destImages = Path(destination / "Images")
